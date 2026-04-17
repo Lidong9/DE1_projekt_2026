@@ -35,7 +35,7 @@ The design is implemented in VHDL as a synchronous digital circuit.
 ## Block Diagram
 
 The design consists of interconnected logical blocks as shown in the provided diagram.
-![alt text](image.png)
+![alt text](image-1.png)
 Each block processes signals and passes results to the next stage.
 
 ---
