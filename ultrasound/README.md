@@ -18,4 +18,4 @@ The testbench (`ultrasound_tb.vhd`) validates the FSM by emulating real-world so
 2. **45 mm distance:** Simulates a 261 µs echo pulse.
 
 ### Behavioral Simulation Waveform
-![Simulation Waveform](ultrasound_tb.png)
+![Simulation Waveform](images/ultrasound_tb.png)
