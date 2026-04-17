@@ -1,0 +1,15 @@
+# Vivado dočasné soubory a logy
+*.jou
+*.log
+*.pb
+*.wdb
+*.dir
+*.str
+
+# Vivado složky s cache a výsledky kompilace
+.Xil/
+*/*.cache/
+*/*.hw/
+*/*.ip_user_files/
+*/*.runs/
+*/*.sim/
