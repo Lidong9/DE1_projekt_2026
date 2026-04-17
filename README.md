@@ -122,6 +122,10 @@ Outputs:
 
 ## Notes
 
+!Edit schematu!
+Pridat simulace 
+Popis design souboru 
+
 
 
 ---
