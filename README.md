@@ -123,9 +123,12 @@ Outputs:
 ## Notes
 
 !Edit schematu!
+
 Pridat simulace 
+
 Popis design souboru 
 
+Pridat PNG do readme 
 
 
 ---
