@@ -91,7 +91,7 @@ Used in:
 
 Waveform verification of the display driver module:
 
-![Display Driver Simulation]![alt text](image.png)
+![alt text](image.png)
 
 The simulation confirms correct digit multiplexing and proper segment output values.
 
