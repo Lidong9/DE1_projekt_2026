@@ -26,7 +26,7 @@ Controls the onboard 7-segment display.
 Functions:
 
 * multiplexes individual digits
-* selects active digit using `an(7:0)`
+* selects active digit using `an(3:0)`
 * outputs segment pattern on `seg(6:0)`
 * displays incoming measured value
 
@@ -38,7 +38,7 @@ Inputs:
 
 Outputs:
 
-* `an(7:0)`
+* `an(3:0)`
 * `seg(6:0)`
 
 ---
