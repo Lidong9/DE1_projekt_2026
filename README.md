@@ -35,57 +35,7 @@ The design is implemented in VHDL as a synchronous digital circuit.
 ## Block Diagram
 
 The design consists of interconnected logical blocks as shown in the provided diagram.
-```mermaid
-flowchart LR
-    %% Definice vstupních portů (Sdružíme je do podgrafu pro lepší vzhled)
-    subgraph VSTUPY [Vstupní porty]
-        direction TB
-        clk([clk])
-        btn_rst([btn_rst])
-        sw_enable([sw_enable])
-        echo_in([echo])
-    end
 
-    %% Komponenty
-    subgraph JADRO [Logické bloky]
-        direction TB
-        DEB[debounce]
-        ULT[Ultrasound Measurer]
-        DISP[display driver]
-    end
-
-    %% Výstupy
-    subgraph VYSTUPY [Výstupní porty]
-        direction TB
-        trigger_out([trigger])
-        seg_out([seg 6:0])
-        an_out([an 7:0])
-    end
-
-    %% Zapojeni vstupu
-    clk --> DEB
-    clk --> ULT
-    clk --> DISP
-
-    btn_rst -->|btn_in| DEB
-    0([0]) -.->|rst| DEB
-    
-    sw_enable -->|enable| ULT
-    echo_in -->|echo| ULT
-
-    %% Vnitrni signaly a sbernice
-    DEB -->|"btn_state \n (sig_rst_clean)"| ULT
-    DEB -->|"btn_state \n (sig_rst_clean)"| DISP
-    
-    ULT ==>|"distance [15:0] \n (sig_distance)"| DISP
-
-    %% Zapojeni výstupů
-    ULT -->|trigger| trigger_out
-    DISP ==>|"seg [6:0]"| seg_out
-    
-    DISP ==>|"anode [3:0] \n (sig_anode_4bit)"| AN_LOGIC{Doplneni na 8}
-    AN_LOGIC ==>|"an [7:0]"| an_out
-```
 ## Modules
 
 ### 1. Debouncer
