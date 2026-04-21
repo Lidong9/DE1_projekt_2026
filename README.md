@@ -35,7 +35,61 @@ The design is implemented in VHDL as a synchronous digital circuit.
 ## Block Diagram
 
 The design consists of interconnected logical blocks as shown in the provided diagram.
+# Měření vzdálenosti pomocí ultrazvukového senzoru na Nexys A7-50T
 
+Tento projekt implementuje měřič vzdálenosti v jazyce VHDL pomocí ultrazvukového senzoru HC-SR04 a vývojové desky Nexys A7-50T (nebo 100T). Naměřená vzdálenost je zobrazována v milimetrech na 7-segmentovém displeji.
+
+## Blokové schéma (Architektura)
+
+```mermaid
+flowchart LR
+    %% Vstupy
+    clk([clk])
+    btn_rst([btn_rst])
+    sw_enable([sw_enable])
+    echo_in([echo])
+
+    %% Komponenty
+    DEB[debounce]
+    ULT[Ultrasound Measurer]
+    DISP[display driver]
+
+    %% Zapojeni vstupu
+    clk --> DEB
+    clk --> ULT
+    clk --> DISP
+
+    btn_rst -->|btn_in| DEB
+    0([0]) -.->|rst| DEB
+    
+    sw_enable -->|enable| ULT
+    echo_in -->|echo| ULT
+
+    %% Vnitrni signaly a sbernice
+    DEB -->|"btn_state \n (sig_rst_clean)"| ULT
+    DEB -->|"btn_state \n (sig_rst_clean)"| DISP
+    
+    ULT ==>|"distance [15:0] \n (sig_distance)"| DISP
+
+    %% Vystupy
+    ULT -->|trigger| trigger_out([trigger])
+    DISP ==>|"seg [6:0]"| seg_out([seg 6:0])
+    
+    DISP ==>|"anode [3:0] \n (sig_anode_4bit)"| AN_LOGIC{Doplneni na 8}
+    AN_LOGIC ==>|"an [7:0]"| an_out([an 7:0])
+```
+
+## Popis vstupů a výstupů (I/O porty)
+
+| Port | Směr | Šířka | Popis | Mapování (Nexys A7) |
+| :--- | :--- | :--- | :--- | :--- |
+| `clk` | Vstup | 1 bit | Hlavní hodinový signál (100 MHz). | `E3` |
+| `btn_rst` | Vstup | 1 bit | Tlačítko pro asynchronní reset. | `N17` (BTNC) |
+| `sw_enable` | Vstup | 1 bit | Přepínač zapnutí/vypnutí měření. | `J15` (SW0) |
+| `echo` | Vstup | 1 bit | Vstupní signál ze senzoru. | `D18` (PMOD JA2) |
+| `trigger` | Výstup | 1 bit | Inicializační puls pro senzor. | `C17` (PMOD JA1) |
+| `an` | Výstup | 8 bitů | Společné anody pro displej. | Displej (anody) |
+| `seg` | Výstup | 7 bitů | Katody displeje (segmenty A-G). | Displej (katody) |
 Each block processes signals and passes results to the next stage.
 
 ---
