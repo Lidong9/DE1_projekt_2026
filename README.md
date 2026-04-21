@@ -35,50 +35,7 @@ The design is implemented in VHDL as a synchronous digital circuit.
 ## Block Diagram
 
 The design consists of interconnected logical blocks as shown in the provided diagram.
-<pre>
-  flowchart LR
-    %% Definice vstupních portů
-    clk([clk])
-    btn_rst([btn_rst])
-    sw_enable([sw_enable])
-    echo_in([echo])
 
-    %% Komponenty
-    DEB[&lt;b&gt;debounce&lt;/b&gt;]
-    ULT[&lt;b&gt;Ultrasound_Measurer&lt;/b&gt;]
-    DISP[&lt;b&gt;display_driver&lt;/b&gt;]
-
-    %% Vstupy do komponent
-    clk --&gt; DEB
-    clk --&gt; ULT
-    clk --&gt; DISP
-
-    btn_rst --&gt;|btn_in| DEB
-    0([ &#39;0&#39; ]) -.-&gt;|rst| DEB
-    
-    sw_enable --&gt;|enable| ULT
-    echo_in --&gt;|echo| ULT
-
-    %% Vnitřní signály (sběrnice)
-    DEB --&gt;|btn_state<br>&lt;b&gt;sig_rst_clean&lt;/b&gt;| ULT
-    DEB --&gt;|btn_state<br>&lt;b&gt;sig_rst_clean&lt;/b&gt;| DISP
-    
-    ULT ==&gt;|distance [15:0]<br>&lt;b&gt;sig_distance&lt;/b&gt;| DISP
-
-    %% Výstupy a logika anod
-    ULT --&gt;|trigger| trigger_out([trigger])
-    DISP ==&gt;|seg [6:0]| seg_out([seg 6:0])
-    
-    DISP ==&gt;|anode [3:0]<br>&lt;b&gt;sig_anode_4bit&lt;/b&gt;| AN_LOGIC{Doplnění<br>na 8 bitů}
-    AN_LOGIC ==&gt;|an [7:0]| an_out([an 7:0])
-
-    %% Stylování (tlusté čáry pro sběrnice)
-    linkStyle 6 stroke-width:3px,stroke:blue;
-    linkStyle 8 stroke-width:3px,stroke:blue;
-    linkStyle 9 stroke-width:3px,stroke:blue;
-    linkStyle 10 stroke-width:3px,stroke:blue;
-</pre>
-![Simulation Waveform](../top_design.png)
 Each block processes signals and passes results to the next stage.
 
 ---
