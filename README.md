@@ -38,6 +38,8 @@ The `ultrasound` module controls the HC-SR04 ultrasonic sensor and calculates th
 | trig     | Trigger signal to sensor |
 | distance | Measured distance |
 
+<img width="1614" height="470" alt="ultrasound_tb" src="https://github.com/user-attachments/assets/d6516168-17d2-44f4-a5f0-02441bb73023" />
+
 ---
 
 ### Top Module (`top_ultrasound.vhd`)
@@ -101,6 +103,8 @@ The `display_driver` module controls a multiplexed 7-segment display.
 |--------|-------------|
 | seg    | Segment control (a–g) |
 | an     | Digit selection |
+
+<img width="1513" height="755" alt="display_driver_tb_sim" src="https://github.com/user-attachments/assets/63de7e0f-5dc2-4c5a-845a-19cfbbe271f3" />
 
 ---
 
