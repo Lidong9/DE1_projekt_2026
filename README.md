@@ -1,118 +1,106 @@
 # DE1_projekt_2026
 # Ultrasonic Distance Measurement (HC-SR04, VHDL)
 
-## Project Description
-
-This project implements an ultrasonic distance measurement system using the HC-SR04 sensor on an FPGA board. The system measures the duration of the echo signal and determines the distance to an object.
-
-The design is implemented in VHDL as a synchronous digital circuit.
+## Modules Description
 
 ---
 
-## Functionality
+### Ultrasound Module (`ultrasound.vhd`)
 
-1. A trigger pulse is generated to start the measurement.
-2. The ultrasonic sensor sends a signal and sets the echo signal HIGH.
-3. The system measures how long the echo signal remains HIGH.
-4. This time is used to estimate distance.
-5. The result is displayed on a 7-segment display.
+The `ultrasound` module controls the HC-SR04 ultrasonic sensor and calculates the distance based on the duration of the echo signal.
 
----
+#### Functionality
+- Generates a trigger pulse to start measurement
+- Waits for the echo signal from the sensor
+- Measures how long the echo signal stays HIGH
+- Converts the measured time into distance
+- Stores the last measured value
 
-## Top-Level Interface
+#### Finite State Machine (FSM)
+- `IDLE` – waiting for start signal
+- `SEND_TRIG` – generates trigger pulse
+- `WAIT_ECHO_START` – waits for echo signal to go HIGH
+- `MEASURE_ECHO` – measures echo duration
+- `SAVE_DATA` – stores measured value
+- `COOLDOWN` – delay before next measurement
 
-| Signal | Direction | Width | Description                |
-| ------ | --------- | ----- | -------------------------- |
-| clk    | input     | 1     | System clock               |
-| rst    | input     | 1     | Reset signal               |
-| echo   | input     | 1     | Echo signal from sensor    |
-| trig   | output    | 1     | Trigger signal to sensor   |
-| seg    | output    | 7     | 7-segment display segments |
-| an     | output    | 4     | Digit enable               |
+#### Inputs
+| Signal | Description |
+|------|-------------|
+| clk  | System clock |
+| rst  | Reset signal |
+| start| Start measurement |
+| echo | Echo signal from sensor |
 
----
-
-## Block Diagram
-
-The design consists of interconnected logical blocks as shown in the provided diagram.
-
-## Modules
-
-### 1. Debouncer
-
-Removes noise from the mechanical button input.
-
-Inputs:
-
-* clk
-* btn
-
-Outputs:
-
-* btn_clean
+#### Outputs
+| Signal   | Description |
+|----------|-------------|
+| trig     | Trigger signal to sensor |
+| distance | Measured distance |
 
 ---
 
-### 2. Ultrasound
+### Top Module (`top_ultrasound.vhd`)
 
-Core module that controls the ultrasonic sensor and performs measurement.
+The `top_ultrasound` module integrates all components of the system and connects them to FPGA inputs and outputs.
 
-Functions:
+#### Functionality
+- Connects the ultrasonic sensor module with the FPGA
+- Handles button input using a debounce circuit
+- Sends measured distance to the display driver
 
-* generates trigger signal
-* measures echo signal duration
-* processes measured value
+#### Description
+- Button press → debounced → start signal
+- Ultrasound module performs measurement
+- Result is forwarded to the display
 
-Inputs:
+#### Inputs
+| Signal | Description |
+|------|-------------|
+| clk  | System clock |
+| rst  | Reset signal |
+| btn  | User button |
+| echo | Echo signal from sensor |
 
-* clk
-* rst
-* echo
-* btn_clean
-
-Outputs:
-
-* trig
-* distance [15:0]
-
----
-
-### 3. Display Driver
-
-Displays the measured distance on a 7-segment display.
-
-Inputs:
-
-* clk
-* distance [15:0]
-
-Outputs:
-
-* seg [6:0]
-* an [3:0]
+#### Outputs
+| Signal | Description |
+|--------|-------------|
+| trig   | Trigger signal to sensor |
+| seg    | 7-segment display segments |
+| an     | Display digit enable |
 
 ---
 
-## Internal Signals
+###  Display Driver (`display_driver.vhd`)
 
-| Signal    | Width | Description             |
-| --------- | ----- | ----------------------- |
-| btn_clean | 1     | Debounced button signal |
-| distance  | 16    | Measured distance value |
+The `display_driver` module controls a multiplexed 7-segment display.
 
----
+#### Functionality
+- Displays numeric value (distance)
+- Converts binary value into decimal digits
+- Controls multiplexing of display digits
 
----
+#### Description
+- Input value is split into individual digits
+- Each digit is converted using `bin2seg`
+- Digits are displayed using fast multiplexing
 
-## Internal Signals
+#### Multiplexing
+- Only one digit is active at a time
+- Digits switch rapidly → appear simultaneously to human eye
 
-| Signal         | Width | Description            |
-| -------------- | ----- | ---------------------- |
-| count          | 16    | Measured echo duration |
-| distance       | 8     | Value used for display |
-| enable_counter | 1     | Enables counting       |
-| start          | 1     | Start measurement      |
-| stop           | 1     | Stop measurement       |
+#### Inputs
+| Signal | Description |
+|------|-------------|
+| clk  | System clock |
+| rst  | Reset signal |
+| data | Value to display |
+
+#### Outputs
+| Signal | Description |
+|--------|-------------|
+| seg    | Segment control (a–g) |
+| an     | Digit selection |
 
 ---
 
